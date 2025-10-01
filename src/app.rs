@@ -26,11 +26,12 @@ impl Korjata {
         match message {
             Message::FileSelect => {
                 if let Some(path) = FileDialog::new()
-                    .add_filter("PNG image", &["jpg"])
+                    .add_filter("JPG image", &["jpg"])
                     .pick_file()
                 {
                     self.file = Some(path.clone());
 
+                    println!("{:#?}", exif(&path));
                     self.exif_text = String::new(); //exif(&path);
                 }
             }
