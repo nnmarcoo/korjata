@@ -1,11 +1,6 @@
 use std::path::PathBuf;
 
-use iced::{
-    Element,
-    Size, Subscription,
-    widget::{column},
-    window,
-};
+use iced::{Element, Size, Subscription, widget::column, window};
 use rfd::FileDialog;
 
 use crate::{
@@ -36,7 +31,7 @@ impl Korjata {
                 {
                     self.file = Some(path.clone());
 
-                    self.exif_text = exif(&path);
+                    self.exif_text = String::new(); //exif(&path);
                 }
             }
 
