@@ -12,6 +12,7 @@ fn main() -> iced::Result {
     application("korjata", Korjata::update, Korjata::view)
         .theme(move |_| theme.clone())
         .default_font(Font::MONOSPACE)
+        .centered()
         .subscription(Korjata::subscription)
         .run()
 }

@@ -8,13 +8,13 @@ pub fn exif(path: &PathBuf) -> String {
     match MediaSource::file_path(path) {
         Ok(ms) => {
             if ms.has_exif() {
-                let mut iter: ExifIter = match parser.parse(ms) {
+                let iter: ExifIter = match parser.parse(ms) {
                     Ok(it) => it,
                     Err(e) => return format!("nom-exif parse error: {:?}", e),
                 };
 
                 let mut out = String::new();
-                for mut entry in iter {
+                for entry in iter {
                     let tag_name = match entry.tag() {
                         Some(t) => format!("{:?}", t),
                         None => format!("0x{:04x}", entry.tag_code()),
@@ -26,7 +26,7 @@ pub fn exif(path: &PathBuf) -> String {
                     out.push_str(&format!(
                         "{} (ifd{}): {}\n",
                         tag_name,
-                        entry.ifd_index(),
+                        entry.ifd_index(),  
                         value_str
                     ));
                 }

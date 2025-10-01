@@ -2,9 +2,8 @@ use std::path::PathBuf;
 
 use iced::{
     Element,
-    Length::Fill,
     Size, Subscription,
-    widget::{Space, column},
+    widget::{column},
     window,
 };
 use rfd::FileDialog;
