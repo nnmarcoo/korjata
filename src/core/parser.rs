@@ -1,26 +1,13 @@
-use std::{fs::File, io::Read, path::PathBuf};
-
 use crate::core::{marker::Marker, segment::Segment};
 
-pub fn segments_from_file(path: &PathBuf) -> Result<Vec<Segment>, String> {
-    let mut file = File::open(path)
-        .map_err(|e| format!("Failed to open file {:?}: {}", path, e))?;
-
-    let mut buf = Vec::new();
-    file.read_to_end(&mut buf)
-        .map_err(|e| format!("Failed to read file {:?}: {}", path, e))?;
-
-    Ok(get_segments(&buf))
-}
-
-pub fn get_segments(buf: &[u8]) -> Vec<Segment> {
-    let mut segments = Vec::new();
+pub fn segments(buf: &[u8]) -> Vec<Segment> {
+    let mut out = Vec::new();
     let mut i = 0;
 
     while i < buf.len() {
-        if let Some(seg) = Segment::from_buf(buf, i) {
+        if let Some(seg) = parse_segment(buf, i) {
             i += seg.total_size();
-            segments.push(seg.clone());
+            out.push(seg.clone());
 
             if seg.marker == Marker::SOS {
                 break;
@@ -29,6 +16,41 @@ pub fn get_segments(buf: &[u8]) -> Vec<Segment> {
             break;
         }
     }
+    out
+}
 
-    segments
+fn parse_segment(buf: &[u8], offset: usize) -> Option<Segment> {
+    if offset + 2 > buf.len() {
+        return None;
+    }
+
+    let marker_val = u16::from_be_bytes([buf[offset], buf[offset + 1]]);
+    let marker = Marker::from_u16(marker_val);
+
+    match marker {
+        Marker::SOI | Marker::EOI | Marker::RST(_) => {
+            return Some(Segment {
+                marker,
+                offset,
+                data: vec![],
+            });
+        }
+        _ => {}
+    }
+
+    if offset + 4 > buf.len() {
+        return None;
+    }
+
+    let seg_len = u16::from_be_bytes([buf[offset + 2], buf[offset + 3]]) as usize;
+
+    if seg_len < 2 || offset + 2 + seg_len > buf.len() {
+        return None;
+    }
+
+    Some(Segment {
+        marker,
+        offset,
+        data: buf[offset + 4..offset + 2 + seg_len].to_vec(),
+    })
 }

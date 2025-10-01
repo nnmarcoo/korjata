@@ -5,7 +5,7 @@ use rfd::FileDialog;
 
 use crate::{
     comps::{bottom_row::bottom_row, data_panel::data_panel},
-    core::parser::segments_from_file,
+    core::media::Media,
 };
 
 #[derive(Debug, Default)]
@@ -31,7 +31,9 @@ impl Korjata {
                 {
                     self.file = Some(path.clone());
 
-                    println!("{:#?}", segments_from_file(&path));
+                    let media = Media::from_file(&path).unwrap();
+
+                    println!("{:#?}", media.segments());
                     self.exif_text = String::new(); //exif(&path);
                 }
             }
