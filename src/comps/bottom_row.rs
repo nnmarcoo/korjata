@@ -5,7 +5,6 @@ use iced::{
     Theme,
     widget::{button, container, row, text},
 };
-use std::path::PathBuf;
 
 use crate::app::Message;
 
@@ -13,15 +12,12 @@ const FONT_SIZE: f32 = 14.;
 const PADDING: f32 = 3.;
 const SPACING: f32 = 5.;
 
-pub fn bottom_row<'a>(curr_file: Option<&'a PathBuf>, width: f32) -> Element<'a, Message> {
+pub fn bottom_row<'a>(curr_file: String, width: f32) -> Element<'a, Message> {
     container(
         row![
-            text(truncate_str(
-                curr_file.and_then(|p| p.to_str()).unwrap_or("-"),
-                width
-            ))
-            .width(Fill)
-            .size(FONT_SIZE),
+            text(truncate_str(&curr_file, width))
+                .width(Fill)
+                .size(FONT_SIZE),
             button(text("rfd").size(FONT_SIZE)).on_press(Message::FileSelect),
         ]
         .align_y(Center)

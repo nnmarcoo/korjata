@@ -1,4 +1,4 @@
 pub mod marker;
 pub mod media;
-pub mod parser;
+pub mod parse;
 pub mod segment;

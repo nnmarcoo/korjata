@@ -1,5 +1,3 @@
-use std::path::PathBuf;
-
 use iced::{Element, Size, Subscription, widget::column, window};
 use rfd::FileDialog;
 
@@ -11,7 +9,7 @@ use crate::{
 #[derive(Debug, Default)]
 pub struct Korjata {
     exif_text: String,
-    file: Option<PathBuf>,
+    media: Media,
     window_size: Size,
 }
 
@@ -29,11 +27,11 @@ impl Korjata {
                     .add_filter("JPG image", &["jpg"])
                     .pick_file()
                 {
-                    self.file = Some(path.clone());
+                    if let Ok(media) = Media::from_file(path) {
+                        self.media = media;
+                    }
 
-                    let media = Media::from_file(&path).unwrap();
-
-                    println!("{:#?}", media.segments());
+                    println!("{:#?}", self.media.segments());
                     self.exif_text = String::new(); //exif(&path);
                 }
             }
@@ -47,7 +45,7 @@ impl Korjata {
     pub fn view(&self) -> Element<Message> {
         column![
             data_panel(self.exif_text.clone()), // clone dumb?
-            bottom_row(self.file.as_ref(), self.window_size.width)
+            bottom_row(self.media.path_string(), self.window_size.width)
         ]
         .into()
     }

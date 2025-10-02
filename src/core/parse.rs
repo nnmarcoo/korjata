@@ -1,15 +1,18 @@
 use crate::core::{marker::Marker, segment::Segment};
 
-pub fn segments(buf: &[u8]) -> Vec<Segment> {
+pub fn segments<'a>(buf: &'a [u8]) -> Vec<Segment<'a>> {
     let mut out = Vec::new();
     let mut i = 0;
 
     while i < buf.len() {
         if let Some(seg) = parse_segment(buf, i) {
-            i += seg.total_size();
-            out.push(seg.clone());
+            let size = seg.total_size();
+            i += size;
 
-            if seg.marker == Marker::SOS {
+            let marker = seg.marker;
+            out.push(seg);
+
+            if marker == Marker::SOS {
                 break;
             }
         } else {
@@ -19,7 +22,7 @@ pub fn segments(buf: &[u8]) -> Vec<Segment> {
     out
 }
 
-fn parse_segment(buf: &[u8], offset: usize) -> Option<Segment> {
+fn parse_segment<'a>(buf: &'a [u8], offset: usize) -> Option<Segment<'a>> {
     if offset + 2 > buf.len() {
         return None;
     }
@@ -32,7 +35,7 @@ fn parse_segment(buf: &[u8], offset: usize) -> Option<Segment> {
             return Some(Segment {
                 marker,
                 offset,
-                data: vec![],
+                data: &[],
             });
         }
         _ => {}
@@ -51,6 +54,6 @@ fn parse_segment(buf: &[u8], offset: usize) -> Option<Segment> {
     Some(Segment {
         marker,
         offset,
-        data: buf[offset + 4..offset + 2 + seg_len].to_vec(),
+        data: &buf[offset + 4..offset + 2 + seg_len], // slice instead of to_vec()
     })
 }

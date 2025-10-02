@@ -1,13 +1,13 @@
 use crate::core::marker::Marker;
 
-#[derive(Debug, Clone)]
-pub struct Segment {
+#[derive(Debug)]
+pub struct Segment<'a> {
     pub marker: Marker,
     pub offset: usize,
-    pub data: Vec<u8>,
+    pub data: &'a [u8],
 }
 
-impl Segment {
+impl Segment<'_> {
     pub fn total_size(&self) -> usize {
         if self.data.is_empty() {
             2
