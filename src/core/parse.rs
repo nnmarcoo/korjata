@@ -54,6 +54,6 @@ fn parse_segment<'a>(buf: &'a [u8], offset: usize) -> Option<Segment<'a>> {
     Some(Segment {
         marker,
         offset,
-        data: &buf[offset + 4..offset + 2 + seg_len], // slice instead of to_vec()
+        data: &buf[offset + 4..offset + 2 + seg_len],
     })
 }
