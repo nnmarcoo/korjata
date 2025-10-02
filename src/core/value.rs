@@ -1,7 +1,4 @@
 use chrono::{DateTime, FixedOffset, NaiveDateTime};
-
-use crate::core::attribute::Attribute;
-
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct URational {
     pub numerator: u32,
