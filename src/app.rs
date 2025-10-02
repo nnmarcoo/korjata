@@ -9,8 +9,9 @@ use crate::{
 #[derive(Debug, Default)]
 pub struct Korjata {
     exif_text: String,
-    media: Media,
     window_size: Size,
+
+    media: Media,
 }
 
 #[derive(Debug, Clone)]
@@ -31,8 +32,7 @@ impl Korjata {
                         self.media = media;
                     }
 
-                    println!("{:#?}", self.media.segments());
-                    self.exif_text = String::new(); //exif(&path);
+                    println!("{:#?}", self.media.segments().to_vec());
                 }
             }
 

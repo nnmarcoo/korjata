@@ -1,6 +1,6 @@
 use crate::core::marker::Marker;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Segment<'a> {
     pub marker: Marker,
     pub offset: usize,

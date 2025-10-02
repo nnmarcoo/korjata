@@ -7,7 +7,6 @@ edition = "2024"
 iced = "0.13.1"
 rand = "0.9.2"
 rfd = "0.15.4"
-nom-exif = "2.5.4"
 
 [profile.release]
 panic = "abort"

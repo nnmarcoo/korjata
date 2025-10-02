@@ -1,3 +1,4 @@
+pub mod ifd;
 pub mod marker;
 pub mod media;
 pub mod parse;

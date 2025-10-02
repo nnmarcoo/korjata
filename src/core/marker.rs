@@ -19,8 +19,8 @@ pub enum Marker {
     SOF13,
     SOF14,
     SOF15,
-    APP(u8),
     COM,
+    APP(u8),
     RST(u8),
     JPG(u8),
     Other(u16),
@@ -48,10 +48,10 @@ impl Marker {
             0xFFCD => Marker::SOF13,
             0xFFCE => Marker::SOF14,
             0xFFCF => Marker::SOF15,
+            0xFFFE => Marker::COM,
             0xFFD0..=0xFFD7 => Marker::RST((b & 0x7) as u8),
             0xFFE0..=0xFFEF => Marker::APP((b & 0xF) as u8),
             0xFFF0..=0xFFFD => Marker::JPG((b & 0xF) as u8),
-            0xFFFE => Marker::COM,
             other => Marker::Other(other),
         }
     }
@@ -77,10 +77,10 @@ impl Marker {
             Marker::SOF13 => 0xFFCD,
             Marker::SOF14 => 0xFFCE,
             Marker::SOF15 => 0xFFCF,
+            Marker::COM => 0xFFFE,
             Marker::RST(n) => 0xFFD0 | (n as u16 & 0x7),
             Marker::APP(n) => 0xFFE0 + n as u16,
             Marker::JPG(n) => 0xFFF0 | (n as u16 & 0xF),
-            Marker::COM => 0xFFFE,
             Marker::Other(b) => b,
         }
     }
