@@ -32,7 +32,9 @@ impl Korjata {
                         self.media = media;
                     }
 
-                    println!("{:#?}", self.media.segments().to_vec());
+                    let appns = self.media.segments();
+
+                    println!("{:#?}", appns);
                 }
             }
 
